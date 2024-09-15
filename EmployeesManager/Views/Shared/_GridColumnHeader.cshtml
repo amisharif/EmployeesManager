@@ -1,0 +1,22 @@
+﻿@if (ViewBag.CurrentSortBy == ViewBag.ColumnName && ViewBag.CurrentSortOrder == SortOrderOptions.ASC.ToString())
+{
+ <th>
+        <a href="~/Home/index?name=@ViewBag.CurrentName&email=@ViewBag.CurrentEmail&mobile=@ViewBag.CurrentMobile&dateOfBirth=@ViewBag.CurrentDateOfBirth&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.DESC)&page=@ViewBag.CurrentPage">@ViewBag.DisplayName</a>
+  <i class="fa-solid fa-sort-up"></i>
+ </th>
+}
+
+else if (ViewBag.CurrentSortBy == ViewBag.ColumnName && ViewBag.CurrentSortOrder == SortOrderOptions.DESC.ToString())
+
+{
+ <th>
+        <a href="~/Home/index?name=@ViewBag.CurrentName&email=@ViewBag.CurrentEmail&mobile=@ViewBag.CurrentMobile&dateOfBirth=@ViewBag.CurrentDateOfBirth&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.ASC)&page=@ViewBag.CurrentPage">@ViewBag.DisplayName</a>
+  <i class="fa-solid fa-sort-down"></i>
+ </th>
+}
+else
+{
+ <th>
+        <a href="~/Home/index?name=@ViewBag.CurrentName&email=@ViewBag.CurrentEmail&mobile=@ViewBag.CurrentMobile&dateOfBirth=@ViewBag.CurrentDateOfBirth&sortBy=@ViewBag.ColumnName&sortOrder=@nameof(SortOrderOptions.ASC)&page=@ViewBag.CurrentPage">@ViewBag.DisplayName</a>
+ </th>
+}

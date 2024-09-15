@@ -1,0 +1,53 @@
+﻿
+    
+<form asp-controller="Home" asp-action="EmployeeTable" method="get">
+
+
+    <div class="box flex">
+        <div class="flex-1">
+            <input type="search" id="name" class="form-input" placeholder="Name"/>
+        </div>
+
+        <div class="flex-1">
+            <input type="search" id="Search" class="form-input" placeholder="Search" name="searchString" value="Search" />
+        </div>
+
+        <div class="flex-1">
+            <button class="button button-blue-back">Search</button>
+            <a href="~/persons/index" class="link-hover">Clear all</a>
+        </div>
+    </div>
+
+
+    <table class="table w-100 mt">
+        <thead>
+            <tr>
+                <td>Photo</td>
+                <td>Full Name</td>
+                <td>Email</td>
+                <td>Mobile</td>
+                <td>Date of birth</td>
+                <td>Action</td>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td style="width:15%">Photo</td>
+                <td style="width:20%">Full Name</td>
+                @*  <td style="width:13%">@person.DateOfBirth?.ToString("dd MMM yyyy")</td> *@
+                <td style="width:9%">Email</td>
+                <td style="width:9%">Mobile</td>
+                <td style="width:10%">Date of birth</td>
+                <td style="width:20%">Action</td>
+            </tr>
+            @*  @foreach (PersonResponse person in Model)
+            {
+
+            } *@
+
+        </tbody>
+
+    </table>
+</form>

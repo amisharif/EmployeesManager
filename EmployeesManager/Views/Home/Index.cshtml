@@ -1,0 +1,274 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<EmployeeResponse>
+
+
+
+<div class="d-flex main-wrapper">
+    <div class="section-left">
+        <div class="table-container">
+            <table class="nav-table">
+               <tr>
+                    <td><i class="fa fa-home"></i></td>
+                    <td id="employeeHome"><a asp-controller="Home" asp-action="Index">Home</a></td>  
+               </tr>
+                <tr>
+                    <td><i class="fa fa-user"></i></td>
+                    <td>Employee</td>
+                </tr>
+                <tr>
+                    <td><i class="fa-solid fa-key"></i></td>
+                    <td id="addEmployee"><a href="#">Add Employee</a></td>
+                </tr>
+            </table>
+        </div>
+      
+       
+    </div>
+
+    <div class="section-right">
+      
+
+        <form asp-controller="Home" asp-action="Index" method="get">
+
+          
+            <div class="row mx-4 mt-4">
+                <div class="col">
+                    <input type="search" name="name" placeholder="Name" class="form-control" />
+                </div>
+                <div class="col">
+                    <input type="date" name="dateOfBirth" class="form-control" />
+                </div>
+                <div class="col">
+                    <input type="email" name="email" class="form-control" placeholder="Email" />
+                </div>
+                <div class="col">
+                    <input type="search" name="mobile" class="form-control" placeholder="Mobile"/>
+                </div>
+
+                <div class="col-1">
+                    <input type="hidden" name="page" value="@ViewBag.CurrentPage" />
+                <button type="submit" class="btn btn-light"><i class="fa fa-search"></i> </button>
+
+                   
+                </div>
+
+            </div>
+         
+         
+            <div class="p-2 mt-3">
+                <table class="table table-bordered text-center align-middle" id="myTable">
+                    <thead>
+                        <tr>
+
+
+                           <th>Photo</th>
+
+                            @await Html.PartialAsync("_GridColumnHeader", new ViewDataDictionary(ViewData) {
+                            { "ColumnName", nameof(Employee.FullName) },
+                            { "DisplayName", "Full Name" },
+                            })
+
+                            @await Html.PartialAsync("_GridColumnHeader", new ViewDataDictionary(ViewData) {
+                            { "ColumnName", nameof(Employee.Email) },
+                            { "DisplayName", "Email" },
+                            })
+
+                            @await Html.PartialAsync("_GridColumnHeader", new ViewDataDictionary(ViewData) {
+                            { "ColumnName", nameof(Employee.Mobile) },
+                            { "DisplayName", "Mobile" },
+                            })
+
+                            @await Html.PartialAsync("_GridColumnHeader", new ViewDataDictionary(ViewData) {
+                            { "ColumnName", nameof(Employee.DateOfBirth) },
+                            { "DisplayName", "Date Of Birth" },
+                            })
+
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    @{
+                        foreach(EmployeeResponse employee in Model)
+                        {
+                            <tr>
+
+                                <td  style="width:5%"><img id="table-img" src="~/images/@employee.Photo" alt="image"></td>
+                                <td style="width:15%">@employee.FullName</td>
+                                <td style="width:15%">@employee.Email</td>
+                                <td style="width:9%">@employee.Mobile</td>
+                                <td style="width:13%">@employee.DateOfBirth.ToString("dd MMM yyyy")</td>
+                                <td style="width:5%">
+                                       
+                                        <a href="#" class="employee" selected-employee="@employee.ID"><i class="fa fa-trash text-danger"></i></a>
+                                        <a href="#" class="employeeEdit" selected-employee="@employee.ID"><i class="fa fa-edit"></i></a>
+                                    
+                                   
+                                    
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                    </tbody>
+
+                </table>
+            </div>
+
+           
+        </form>
+
+        <div class="Pagination d-flex justify-content-between px-3">
+            <div class="pagination-left">
+                Showing @ViewBag.From to @ViewBag.To out of @(ViewBag.TotalEmployees)
+            </div>
+            <div class="pagination-Right">
+              
+                @{
+                    <table>
+                        <tr>
+                            <td class="px-2 py-2"><a class="" href="~/Home/index/?page=1"> <i class="fa fa-angle-double-left" style="font-size:14px"></i></a></td>
+                            <td> 
+                            
+                           </td>
+                            @for (int i = 0; i < ViewBag.TotalPage; i++)
+                    {
+                                if (ViewBag.CurrentPage == i + 1)
+                                {
+                                    <td class="px-2 py-2"><a class="text-danger" href="~/Home/index/?page=@(i+1)">@(i + 1)</a></td>
+                                }
+                                else{
+                                    <td class="px-2 py-2"><a class="pageNo currentPage=@(i+1)" href="~/Home/index/?page=@(i+1)">@(i + 1)</a></td>
+                                }
+                               
+                    }
+                            <td class="px-2 py-2"><a class="" href="~/Home/index/?page=@ViewBag.TotalPage"> <i class="fa fa-angle-double-right" style="font-size:14px"></i></a></td>
+                            <td>
+                        </tr>
+                        
+                    </table>
+                   
+                }
+                 
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div>
+
+
+    <script type="application/javascript">
+
+
+
+   //inject Create action view to the section right class
+        var page;
+
+        $("#addEmployee").click(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Create", "Home")',
+                dataType:"text",
+                success: function (response) {
+                    console.log(response);
+                    $(".section-right").html(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                }
+            });
+        })
+
+
+        //Call Edit action and delete employee by employee id
+
+            $(".employeeEdit").click(function (event) {
+            event.preventDefault();
+            empID = $(this).attr("selected-employee");
+
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Edit", "Home")',
+                dataType:"text",
+                data:{
+                    id:empID
+                },
+                success: function (response) {
+                // console.log(response);
+                 $(".section-right").html(response);
+                   // window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                }
+            });
+
+        });
+
+
+
+
+        //Call delete action and delete employee by employee id
+
+          $(".employee").click(function (event) {
+            event.preventDefault();
+
+            $(".employee").removeClass("active");
+            $(this).addClass("active");
+
+            empID = $(this).attr("selected-employee");
+
+                          Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
+
+
+                $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Delete", "Home")',
+                dataType:"text",
+                data:{
+                    id:empID
+                },
+                success: function (response) {
+                   // console.log(response);
+                  // $(".section-right").html(response);
+                       window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                }
+            });
+
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "Your file has been deleted.",
+                  icon: "success"
+                });
+              }
+            });
+        });
+
+
+
+
+    </script>
+
+
+</div>
+
